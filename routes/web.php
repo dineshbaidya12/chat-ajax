@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController as DefaultLoginController;
+use App\Http\Controllers\loginController as LoginController;
 use App\Http\Controllers\mainController as MainController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -15,4 +17,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [MainController::class, 'index'])->name('index');
+Route::get('/login', [LoginController::class, 'login'])->name('login');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/login-action', [LoginController::class, 'loginAction'])->name('login-action');
+Route::get('/register', [LoginController::class, 'register'])->name('register');
+Route::post('/register-user', [LoginController::class, 'registerUser'])->name('register-user');
+Route::post('/check-username', [LoginController::class, 'checkUsername'])->name('check-username');
+Route::post('/check-email', [LoginController::class, 'checkEmail'])->name('check-email');
+Route::group(['middleware' => 'checkUserLoggedIn'], function () {
+    Route::get('/', [MainController::class, 'index'])->name('index');
+    Route::post('send-msg', [MainController::class, 'sendMsg'])->name('send-msg');
+});
