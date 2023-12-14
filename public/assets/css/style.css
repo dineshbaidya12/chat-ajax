@@ -191,6 +191,7 @@ hr {
 .message-details {
     font-size: 14px;
     font-family: 'Josefin Sans', sans-serif;
+    white-space: nowrap;
 }
 
 .status-unread {
@@ -377,6 +378,12 @@ hr {
     opacity: 0;
     height: 0;
     z-index: 999;
+}
+
+.message-details span {
+    font-size: 14px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-style: italic;
 }
 
 .options.active {

@@ -27,4 +27,8 @@ Route::post('/check-email', [LoginController::class, 'checkEmail'])->name('check
 Route::group(['middleware' => 'checkUserLoggedIn'], function () {
     Route::get('/', [MainController::class, 'index'])->name('index');
     Route::post('send-msg', [MainController::class, 'sendMsg'])->name('send-msg');
+    Route::post('/send-messasge', [MainController::class, 'SendMessageAjax'])->name('send-messasge');
+    // Route::get('/{user}', [MainController::class, 'userChats'])->name('user-chats');
+    Route::get('/get-message/{id}/{username}', [MainController::class, 'getMessage'])->name('get-message');
+    Route::get('/get-message-realtime/{id}/{username}', [MainController::class, 'getMessageRealtime'])->name('get-message-realtime');
 });

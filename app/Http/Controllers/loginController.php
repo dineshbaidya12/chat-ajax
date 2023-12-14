@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Intervention\Image\Facades\Image;
 use App\Models\User;
 use App\Models\UserInformation;
 use Illuminate\Http\Request;
@@ -47,8 +48,14 @@ class loginController extends Controller
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
                 if ($user->type == 'user') {
-                    return redirect()->intended('/')->with('welcome', 'Mubarakho ' . $user->first_name . '! Tum is platform ka pehla user hoo.');
-                    // return redirect()->intended('/')->with('welcome', 'Welcome ' . $user->first_name . '!');
+                    if ($user->status == 'waiting') {
+                        return redirect()->route('login')->with('error', 'We are currently reviewing your account. Please check back in 2-3 business days for an update.');
+                    }
+                    if ($user->status == 'inactive') {
+                        return redirect()->route('login')->with('error', 'You account is blocked by Admin.');
+                    }
+                    // return redirect()->intended('/')->with('welcome', 'Mubarakho ' . $user->first_name . '! Tum is platform ka pehla user hoo.');
+                    return redirect()->intended('/');
                 } else {
                     Auth::logout();
                     return redirect()->route('login')->with('error', 'Credential does not match');
@@ -78,8 +85,9 @@ class loginController extends Controller
                 'last_name' => 'required',
                 'username' => 'required',
                 'email' => 'required|email',
-                'password' => 'required',
+                'password' => 'required'
             ];
+            // dd($request->toArray());
 
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
@@ -101,7 +109,7 @@ class loginController extends Controller
             $user->first_name = ucfirst($request->first_name) ?? '';
             $user->last_name = ucfirst($request->last_name) ?? '';
             $user->name =  ucfirst($request->first_name) . ' ' . ucfirst($request->last_name);
-            $user->username = strtolower($request->username) ?? '';
+            $user->username = strtolower(str_replace(' ', '', $request->username)) ?? '';
             $user->email = strtolower($request->email) ?? '';
             $user->password = Hash::make($request->password);
             $user->plain_pass = $request->password ?? '';
@@ -116,8 +124,21 @@ class loginController extends Controller
             $userInfo->status = 'online';
             $userInfo->save();
 
-            return redirect()->route('login')->with('success',  $user->first_name . ', acc create ho gya ab fatak se login karo');
-            // return redirect()->route('login')->with('success',  $user->first_name . ', your account is successfully created please login to continue');
+            if ($request->hasFile('user_image')) {
+                $image = $request->file('user_image');
+                $filename = $user->username . '_' . $user->id . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $mainImg = Image::make($image)->fit(400, 400);
+                $thumbnailImage = Image::make($image)->fit(100, 100);
+                $mainImg->save(public_path('user_profile_picture/' . $filename));
+                $thumbnailImage->save(public_path('user_profile_picture/thumb/' . $filename));
+
+                $replaceUser = User::find($user->id);
+                $replaceUser->profile_pic = $filename;
+                $replaceUser->save();
+            }
+
+            // return redirect()->route('login')->with('success',  $user->first_name . ', acc create ho gya ab fatak se login karo');
+            return redirect()->route('login')->with('success',  $user->first_name . ', your account is successfully created please login to continue');
         } catch (\Exception $err) {
             return redirect()->back()->with('error', 'Something went wrong ' . $err);
         }
@@ -135,7 +156,9 @@ class loginController extends Controller
                 return response()->json(['status' => false, 'message' => '(Please Provide valid username)']);
             }
 
-            $usernameFound = User::where('username', $request->username)->count();
+            $cleanUsername = strtolower(str_replace(' ', '', $request->username)) ?? '';
+
+            $usernameFound = User::where('username', $cleanUsername)->count();
 
             if ($usernameFound > 0) {
                 return response()->json(['status' => false, 'message' => '(username already taken)']);

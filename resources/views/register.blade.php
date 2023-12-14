@@ -31,6 +31,50 @@
         #us_err {
             font-size: 12px;
         }
+
+
+        label {
+            margin-top: 12px;
+        }
+
+        form {
+            padding: 33px 35px;
+        }
+
+        #profile-pic {
+            height: 120px;
+            width: 120px;
+            margin: auto;
+            position: relative;
+        }
+
+        #profile-pic #profile-picture-img {
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        input {
+            margin-top: 6px;
+        }
+
+        .edit-dp {
+            position: absolute;
+            right: 0px;
+            bottom: 0px;
+            height: 30px;
+            width: 30px;
+            background: #e3e3e3;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #edit-img {
+            height: 100%;
+            width: 100%;
+            padding: 7px;
+        }
     </style>
 </head>
 
@@ -39,9 +83,21 @@
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form name="register_form" id="register-form" method="POST" action="{{ route('register-user') }}">
+    <form name="register_form" id="register-form" method="POST" action="{{ route('register-user') }}"
+        enctype="multipart/form-data">
         @csrf
         <h3>Create New Account</h3>
+
+        <div id="profile-pic">
+            <img src="{{ asset('assets/images/dummy-imgs/default-profile-picture.jpg') }}" id="profile-picture-img">
+            <div class="edit-dp">
+                <img src="{{ asset('assets/images/dummy-imgs/pencil.png') }}" id="edit-img">
+            </div>
+        </div>
+
+        <input type="file" id="profile_picture_input" name="user_image" style="display:none;"
+            accept=".jpg,.png,.jpeg">
+
 
         <label for="first_name">First Name <span class="err" id="fname_err">(This is required)</span></label>
         <input type="text" placeholder="First Name" id="first_name" name="first_name">
@@ -197,6 +253,24 @@
         $(document).ready(function() {
             $('#register-form')[0].reset();
             disableSubmit();
+
+            $('#profile_picture_input').on('change', function() {
+                var input = this;
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        $('#profile-picture-img').attr('src', e.target.result);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });
+
+            $(document).on('click', '#edit-img, #profile-picture-img', function() {
+                $('#profile_picture_input').click();
+            });
         });
     </script>
 </body>

@@ -75,20 +75,12 @@
     <script>
         @if (session('success'))
             Swal.fire({
-                title: 'Sabas Betaa!',
+                title: 'Congratulations!',
                 text: '{{ session('success') }}',
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
         @endif
-        // @if (session('success'))
-        //     Swal.fire({
-        //         title: 'Congratulations!',
-        //         text: '{{ session('success') }}',
-        //         icon: 'success',
-        //         confirmButtonText: 'OK'
-        //     });
-        // @endif
     </script>
     <script>
         $('#login-btn').on('click', function() {
@@ -111,6 +103,12 @@
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);
         }
+
+        $(document).on('keydown', function(event) {
+            if (event.key === 'Enter') {
+                $('#login-btn').click();
+            }
+        });
     </script>
 </body>
 

@@ -21,7 +21,8 @@
     <script src="/path/to/emoji-picker.js"></script> --}}
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.css" />
-
+    <link href=" https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.min.css " rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <style>
         .conversation-chats-container {
             width: 100%;
@@ -61,6 +62,114 @@
             width: 100%;
         }
 
+        .more-opt-left-icon {
+            padding-right: 12px;
+        }
+
+        .more-option-left {
+            right: 24px;
+            top: 32px;
+            background: white;
+            color: black;
+            list-style: none;
+            width: 123px;
+            background: white;
+            color: black;
+            font-size: .8rem;
+            cursor: pointer;
+            padding: 0px 7px 0px 7px;
+            user-select: none;
+            overflow: hidden;
+            transition: all 0.2s ease-in;
+            opacity: 0;
+            height: 0;
+            z-index: 999;
+        }
+
+        .more-option-left a {
+            text-decoration: none;
+            color: black !important;
+        }
+
+        .more-option-left a li {
+            font-family: var(--primary-heading);
+            padding-bottom: 2px;
+        }
+
+        .more-option-left.active {
+            padding: 7px;
+            opacity: 1;
+            height: fit-content;
+        }
+
+
+        #right-bar {
+            transform: translateX(0px);
+        }
+
+        .go-back-cont {
+            display: none;
+        }
+
+        .no-conv {
+            color: white;
+            text-align: center;
+            background: #31864e;
+            display: inline;
+            padding: 5px 25px;
+            border-radius: 20px;
+            margin: auto;
+        }
+
+        .no-conv-div {
+            display: flex;
+            align-items: center;
+        }
+
+        .deleted-msg {
+            font-size: 14px;
+            font-family: 'Josefin Sans', sans-serif;
+            font-style: italic;
+        }
+
+        .status-deleted {
+            width: 15px;
+            margin-top: -5px;
+        }
+
+
+        /* Green Circle count how much unread message */
+
+        .unread-msg-count {
+            display: inline-block;
+            font-family: var(--primary-heading);
+            font-size: 12px;
+            background: #258825;
+            padding: 0px 7px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+
+        #type-message {
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #394053 #4f5055;
+        }
+
+        #type-message::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #type-message::-webkit-scrollbar-thumb {
+            background-color: #394053;
+        }
+
+        #type-message::-webkit-scrollbar-track {
+            background-color: #4f5055;
+        }
+
+
         @media (min-width: 420px) and (max-width: 767px) {
             .users-list {
                 width: 100%;
@@ -92,7 +201,83 @@
                 padding: 0px;
                 padding-left: 7px;
             }
+
+            .more-opt-left-icon {
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+
+            .more-option-left {
+                right: 16px;
+            }
+
+            #right-bar {
+                transform: translateX(0px);
+            }
         }
+
+        /* For Less than 768px screen */
+
+        @media (max-width: 767px) {
+            #right-bar {
+                transform: translateX(10px);
+            }
+
+            .go-back-cont {
+                display: block;
+            }
+        }
+
+        /* for textarea  */
+
+        @media(min-width:680px) and (max-width:767px) {
+            #type-message {
+                width: 89%;
+            }
+        }
+
+
+        @media(min-width:580px) and (max-width:680px) {
+            #type-message {
+                width: 87%;
+            }
+        }
+
+        @media(min-width:463px)and (max-width:580px) {
+            #type-message {
+                width: 87%;
+            }
+
+            .send-msg-btn img {
+                top: -16px;
+                right: -9px;
+                height: 120%;
+                width: 120%;
+            }
+        }
+
+        @media(max-width:463px) {
+            #type-message {
+                display: block;
+                width: 97vw;
+                padding-right: 48px;
+            }
+
+            .send-msg-btn {
+                position: absolute;
+                top: 29px;
+                right: 5%;
+            }
+
+            .send-msg-btn img {
+                top: -16px;
+                right: 0px;
+                height: 120%;
+                width: 120%;
+            }
+        }
+
+        /* for textarea  */
 
         @media (min-width: 992px) and (max-width: 1286px) {
             .send-msg-btn img {
@@ -135,10 +320,20 @@
                 <div class="col-12 col-md-4 col-lg-3 left-bar inside-container" id="left-bar">
                     <div class="row">
                         <div class="left-bar-header p-2 w-100 position-relative">
+
+                            <ul class="position-absolute more-option-left" id="more-option-left">
+                                <a href="#">
+                                    <li>View Profile</li>
+                                </a>
+                                <a href="{{ route('logout') }}">
+                                    <li>Logout</li>
+                                </a>
+                            </ul>
+
                             <div class="col-12 position-absolute search-bar-div">
                                 <div class="w-100 position-relative">
                                     <input type="text" value="" name="search-users" class="search-users"
-                                        placeholder="search">
+                                        id="static-search-users" placeholder="search">
                                     <i
                                         class="fa-solid fa-magnifying-glass cursor-pointer m-1 px-3 color-white position-absolute search-inside-input">
                                     </i>
@@ -150,7 +345,11 @@
                                 </div>
                                 <div class="col-8 d-flex justify-content-end">
                                     <a href="#search" id="search-user">
-                                        <i class="fa-solid fa-magnifying-glass cursor-pointer m-1 px-3 color-white"></i>
+                                        <i class="fa-solid fa-magnifying-glass cursor-pointer m-1 px-2 color-white"></i>
+                                    </a>
+                                    <a href="#more-option" id="more-opt-left">
+                                        <i
+                                            class="fa-solid fa-ellipsis-vertical cursor-pointer m-1 color-white more-opt-left-icon"></i>
                                     </a>
                                 </div>
                             </div>
@@ -178,23 +377,11 @@
                                         <div class="inner-user-list added-lists" id="added-lists">
 
                                             <div class="col-12">
+                                                {{-- 
 
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                                ----------- Template of Showinf Added Lists ----------------
 
-                                                <span class="separtor"></span>
+                                                
 
                                                 <div class="row indivisual-user">
                                                     <div class="user-image-div col-3">
@@ -213,58 +400,91 @@
 
                                                 <span class="separtor"></span>
 
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                                ----------- Template of Showinf Added Lists ----------------
 
-                                                <span class="separtor"></span>
+                                                --}}
 
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick-double.png') }}"
-                                                                alt="tick" class="status-read"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
+                                                @if (count($connections) > 0)
+                                                    @foreach ($connections as $conn)
+                                                        @if ($conn->first_user !== auth()->user()->id)
+                                                            @php
+                                                                $name = $conn->firstUserDetails->name;
+                                                                $profilePic = $conn->firstUserDetails->profile_pic;
+                                                                $connectedUserId = $conn->firstUserDetails->id;
+                                                                $connectedUsername = $conn->firstUserDetails->username;
+                                                            @endphp
+                                                        @else
+                                                            @php
+                                                                $name = $conn->sedondUserDetails->name;
+                                                                $profilePic = $conn->sedondUserDetails->profile_pic;
+                                                                $connectedUserId = $conn->sedondUserDetails->id;
+                                                                $connectedUsername = $conn->sedondUserDetails->username;
+                                                            @endphp
+                                                        @endif
 
 
+                                                        <div class="row indivisual-user"
+                                                            data-id="{{ $connectedUserId }}"
+                                                            data-username="{{ $connectedUsername }}"
+                                                            data-name="{{ $name }}">
+                                                            <div class="user-image-div col-3">
+                                                                @if ($profilePic != null || $profilePic != '' || !file_exists('user_profile_picture/thumb/' . $profilePic))
+                                                                    <img src="{{ asset('user_profile_picture/thumb/' . $profilePic) }}"
+                                                                        alt="Lorem Ipsum" class="users-dp">
+                                                                @else
+                                                                    <img src="{{ asset('assets/images/dummy-imgs/default-profile-picture.jpg') }}"
+                                                                        alt="Lorem Ipsum" class="users-dp">
+                                                                @endif
+                                                            </div>
+                                                            <div class="user-details-div col-9">
+                                                                <p class="m-0 user-name">
+                                                                    {{ $name ?? 'Server Issue' }}
+                                                                </p>
+                                                                @if ($conn->last_message != '')
+                                                                    @php
+                                                                        try {
+                                                                            $lastMessageDetails = $conn->messageDetails[0];
+                                                                        } catch (\Exception $err) {
+                                                                            $lastMessageDetails = (object) [
+                                                                                'sender' => '',
+                                                                                'status' => '',
+                                                                                'message' => '',
+                                                                            ];
+                                                                        }
+                                                                    @endphp
+                                                                    <p class="m-0 message-details">
+                                                                        @if ($lastMessageDetails->sender == auth()->user()->id && $lastMessageDetails->status == 'unseen')
+                                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
+                                                                                alt="tick"
+                                                                                class="status-unread">{{ \Illuminate\Support\Str::limit(strip_tags($lastMessageDetails->message), 30) }}
+                                                                        @elseif ($lastMessageDetails->sender == auth()->user()->id && $lastMessageDetails->status == 'seen')
+                                                                            <img src="{{ asset('assets/images/dummy-imgs/tick-double.png') }}"
+                                                                                alt="tick"
+                                                                                class="status-read">{{ \Illuminate\Support\Str::limit(strip_tags($lastMessageDetails->message), 30) }}
+                                                                        @elseif ($lastMessageDetails->status == 'deleted')
+                                                                            <img src="{{ asset('assets/images/dummy-imgs/block.png') }}"
+                                                                                alt="tick"
+                                                                                class="status-deleted"><span>This
+                                                                                Message
+                                                                                was Deleted</span>
+                                                                        @else
+                                                                            {{ \Illuminate\Support\Str::limit(strip_tags($lastMessageDetails->message), 30) }}
+                                                                        @endif
+                                                                    </p>
+                                                                @else
+                                                                    <p class="m-0 message-details">
+                                                                        <span style="color:grey;">No Conversation
+                                                                            Yet</span>
+                                                                    </p>
+                                                                @endif
+
+                                                            </div>
+                                                        </div>
+                                                        <span class="separtor"></span>
+                                                    @endforeach
+                                                @else
+                                                    <p>No Connections</p>
+                                                @endif
 
                                             </div>
 
@@ -487,12 +707,12 @@
                                         </div>
                                         <div class="conversation-person-details d-flex">
                                             <div class="conversation-user-img div-sameline">
-                                                <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                    alt="">
+                                                <img src="{{ asset('assets/images/dummy-imgs/default-profile-picture.jpg') }}"
+                                                    alt="" id="chat-with-img">
                                             </div>
                                             <div class="conversation-user-name">
-                                                <p class="username">Lorem ipsum doller si</p>
-                                                <p class="current-status">Typing...</p>
+                                                <p class="username" id="chat-with"></p>
+                                                <p class="current-status" id="chat-with-status">Typing...</p>
                                             </div>
                                         </div>
                                     </div>
@@ -514,204 +734,15 @@
 
                                     <emoji-picker for="type-message"></emoji-picker>
                                 </div>
+
+
                                 <div class="chats" id="chats">
 
-
-                                    <div class="parent-conv reciever">
-                                        <div class="conversations-reciever conversations">
-                                            <p>
-                                                Lorem Ipsum Doller si
-                                            </p>
-                                        </div>
-                                        <div class="message-time">12:50</div>
-                                    </div>
-
-                                    <div class="conversation-time">
-                                        <p>Today</p>
-                                    </div>
-
-                                    <div class="parent-conv reciever">
-                                        <div class="conversations-reciever conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, dicta
-                                                reprehenderit delectus accusamus reiciendis vero sint dolorum impedit
-                                                atque
-                                                quod labore voluptates asperiores commodi qui quibusdam alias, amet
-                                                exercitationem. Dolores.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="spacer-10"></div>
-
-                                    <div class="parent-conv sender">
-                                        <div class="conversations-sender conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, dicta
-                                                reprehenderit delectus accusamus reiciendis vero sint dolorum impedit
-                                                atque
-                                                quod labore voluptates asperiores commodi qui quibusdam alias, amet
-                                                exercitationem. Dolores.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="parent-conv sender">
-                                        <div class="conversations-sender conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="parent-conv sender">
-                                        <div class="conversations-sender conversations">
-                                            <p id="long-p">
-                                                Lorem ipsum dolor sit amet.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="parent-conv sender">
-                                        <div class="conversations-sender conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque, illo
-                                                obcaecati cum doloribus debitis error.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="spacer-10"></div>
-
-                                    <div class="parent-conv reciever">
-                                        <div class="conversations-reciever conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dolorum
-                                                aperiam sapiente?
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="conversation-time">
-                                        <p>12th Dec, 2023</p>
-                                    </div>
-
-                                    <div class="parent-conv reciever">
-                                        <div class="conversations-reciever conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure voluptatem
-                                                adipisci fuga numquam sed ut nam tempora iste dicta a ad ipsum fugiat,
-                                                soluta unde eos debitis aut cupiditate. Corrupti.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-
-                                    <div class="parent-conv reciever">
-                                        <div class="conversations-reciever conversations">
-                                            <p>
-                                                Lorem Ipsum Doller si
-                                            </p>
-                                        </div>
-                                        <div class="message-time">12:50</div>
-                                    </div>
-
-                                    <div class="conversation-time">
-                                        <p>Today</p>
-                                    </div>
-
-                                    <div class="parent-conv reciever">
-                                        <div class="conversations-reciever conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, dicta
-                                                reprehenderit delectus accusamus reiciendis vero sint dolorum impedit
-                                                atque
-                                                quod labore voluptates asperiores commodi qui quibusdam alias, amet
-                                                exercitationem. Dolores.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="spacer-10"></div>
-
-                                    <div class="parent-conv sender">
-                                        <div class="conversations-sender conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, dicta
-                                                reprehenderit delectus accusamus reiciendis vero sint dolorum impedit
-                                                atque
-                                                quod labore voluptates asperiores commodi qui quibusdam alias, amet
-                                                exercitationem. Dolores.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="parent-conv sender">
-                                        <div class="conversations-sender conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="parent-conv sender">
-                                        <div class="conversations-sender conversations">
-                                            <p id="long-p">
-                                                Lorem ipsum dolor sit amet.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="parent-conv sender">
-                                        <div class="conversations-sender conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque, illo
-                                                obcaecati cum doloribus debitis error.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="spacer-10"></div>
-
-                                    <div class="parent-conv reciever">
-                                        <div class="conversations-reciever conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dolorum
-                                                aperiam sapiente?
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
-                                    <div class="conversation-time">
-                                        <p>12th Dec, 2023</p>
-                                    </div>
-
-                                    <div class="parent-conv reciever">
-                                        <div class="conversations-reciever conversations">
-                                            <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure voluptatem
-                                                adipisci fuga numquam sed ut nam tempora iste dicta a ad ipsum fugiat,
-                                                soluta unde eos debitis aut cupiditate. Corrupti.
-                                            </p>
-                                        </div>
-                                        <div class="message-time">19:06</div>
-                                    </div>
-
+                                    {{-- Dynamically send content  --}}
 
                                 </div>
+
+
                                 <div class="typing-area position-absolute">
 
                                     <div class="position-absolute emoji-btn">
@@ -725,11 +756,10 @@
                                     </form>
                                     <div class="send-msg-btn">
                                         <img src="{{ asset('assets/images/dummy-imgs/send.png') }}" alt="send"
-                                            class="cursor-pointer" id="send-the-msg">
+                                            class="cursor-pointer" id="send-the-msg" data-id="">
                                     </div>
                                 </div>
                             </div>
-
 
 
 
@@ -762,16 +792,6 @@
             });
         @endif
     </script>
-    <script>
-        @if (session('welcome'))
-            Swal.fire({
-                title: 'Mubarakho!',
-                text: '{{ session('welcome') }}',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        @endif
-    </script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script>
         $(document).ready(function() {
@@ -780,6 +800,7 @@
             chatsSec.css('scroll-behavior', 'auto');
 
             function scrollToBottom() {
+                // console.log('scrol to bottom');
                 chatsSec.scrollTop(chatsSec.prop('scrollHeight'));
             }
 
@@ -792,6 +813,7 @@
 
             let addReq = 'add';
             let isOpenSearchDiv = false;
+            let moreOptionLeft = false;
             let moreConv = false;
             // search bar function
             $('#search-user').on('click', function() {
@@ -811,6 +833,7 @@
             // Seacrh Bar Div
 
             function openSearch() {
+                closeMoreOptionLeft();
                 $('.search-bar-div').css('display', 'block');
                 setTimeout(() => {
                     $('.search-bar-div').css('transform', 'translateY(-0px)');
@@ -828,6 +851,9 @@
                 setTimeout(() => {
                     isOpenSearchDiv = false;
                     $('.search-bar-div').css('display', 'none');
+                    $('#static-search-users').val('');
+                    $('#added-lists .indivisual-user').show();
+                    $('.separtor').show();
                 }, 400);
             }
 
@@ -843,6 +869,7 @@
                 if (isOpenSearchDiv) {
                     closeSearch();
                 }
+                closeMoreOptionLeft();
             });
 
             $('#requests-btn').on('click', function() {
@@ -889,7 +916,7 @@
 
             //---show hide time 
 
-            $('.parent-conv').on('click', function() {
+            $(document).on('click', '.parent-conv', function() {
                 var messageTime = $(this).find('.message-time');
                 if (messageTime.css('display') == 'none') {
                     messageTime.css('display', 'block');
@@ -920,7 +947,169 @@
             }
             //-------type
 
+            // ----------------- More opt left --------------//
+            $('#more-opt-left').on('click', function(e) {
+                if (!moreOptionLeft) {
+                    moreOptionLeft = true;
+                    $('#more-option-left').addClass('active');
+                } else {
+                    closeMoreOptionLeft();
+                }
+            });
+
+            function closeMoreOptionLeft() {
+                if (moreOptionLeft) {
+                    moreOptionLeft = false;
+                    $('#more-option-left').removeClass('active');
+                }
+            }
+
+            closeMoreOptionLeft();
+
+            // ----------------- More opt left --------------//
+
+
+            {{--  // <div class="parent-conv sender">
+            //     <div class="conversations-sender conversations">
+            //         <p>
+            //             @if ($msg->status !== 'deleted')
+            //                 {{ $msg->message ?? '' }}
+            //             @else
+            //                 <img style="padding-top:3px; opacity: .4;"
+            //                     src="{{ asset('assets/images/dummy-imgs/block.png') }}" class="status-deleted"><span
+            //                     class="deleted-msg">This Message was
+            //                     Deleted</span>
+            //             @endif
+            //         </p>
+            //     </div>
+            //     <div class="message-time">{{ \Carbon\Carbon::parse($msg->time)->format('h:iA') }}</div>
+            // </div>
+            --}}
+
+
+            //----------- send message ---------//
+            $('#send-the-msg').on('click', function() {
+                let chatsDiv = $('#chats');
+                let message = $('#type-message').val().trim();
+                let id = $(this).data('id');
+                // console.log(message);
+
+                if (id != '' && message !== '') {
+                    var newDiv = $('<div>', {
+                        'class': 'parent-conv sender'
+                    });
+
+                    $.ajax({
+                        url: "{{ route('send-messasge') }}",
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            message: message,
+                            '_token': '{{ csrf_token() }}'
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            if (data.status) {
+                                let newDivContent =
+                                    `<div class="conversations-sender conversations">${data.message}</p></div>
+                                    <div class="message-time">${data.time}</div>`;
+                                newDiv.html(newDivContent);
+                                chatsDiv.append(newDiv);
+                                scrollToBottom();
+                                $('#type-message').val('');
+                            } else {
+                                Swal.fire({
+                                    title: 'Something went wrong please try again letter or refresh the page.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    console.log('spaces');
+                }
+
+            });
+            //----------- send message ---------//
+
+
+            // ------------------ static search users -------------------- //
+
+
+            $('#static-search-users').on('input', function() {
+                let value = $(this).val().toLowerCase();
+                let addedLists = $('#added-lists .indivisual-user');
+
+                addedLists.hide();
+                addedLists.filter(function() {
+                    return $(this).data('name').toLowerCase().includes(value);
+                }).show();
+
+                // Hide separators that are next to hidden .indivisual-user elements
+                addedLists.filter(':hidden').each(function() {
+                    $(this).next('.separtor').hide();
+                });
+
+            });
+
+            // ------------------ static search users -------------------- //
+
+            // ------------- presss ctrl + enter to send msg -------------- //
+
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey && event.key === 'Enter') {
+                    $('#send-the-msg').click();
+                }
+            });
+
+            // ------------- presss ctrl + enter to send msg -------------- //
+
+            // ---------------------- check For new message every 500 milisecond ---------------------- //
+
+
+
+
+            setInterval(() => {
+                var currentChatId = $('#send-the-msg').data('id');
+                // console.log(currentChatId);
+                if (currentChatId !== null && currentChatId !== '' && currentChatId !== 0) {
+                    let chatDiv = $('#chats');
+                    $.ajax({
+                        url: "{{ route('get-message-realtime', ['id' => ':id', 'username' => ':username']) }}"
+                            .replace(':id', currentChatId)
+                            .replace(':username', $('#send-the-msg').data('username')),
+                        type: 'GET',
+                        success: function(data) {
+                            console.log(data);
+                            chatDiv.append(data);
+                            if (data != '' && data != null) {
+                                chatDiv.scrollTop(chatDiv.prop('scrollHeight'));
+                            }
+                        }
+                    });
+                }
+            }, 5000);
+
+
+            // ---------------------- check For new message every 500 milisecond ---------------------- //
+
+
+
+
+
+
+
         });
+
+
+
+
+        // -----------------------------------------responsive js ----------------------------------------------//
+
+
+
+
 
         //-------window size
         let smallScreenMediaQuery = window.matchMedia('(max-width: 767px)');
@@ -928,17 +1117,20 @@
 
         function handleScreenSizeChange() {
             if (smallScreenMediaQuery.matches) {
-                console.log('less than 767px');
+                // console.log('less than 767px');
                 chatsLists.forEach(element => {
                     element.classList.add('small-screen-added-lists');
                 });
                 document.getElementById('right-bar').classList.add('small-right-bar');
                 document.getElementById('left-bar').classList.add('small-left-bar');
+                $('.small-right-bar').css('display', 'none');
             } else {
-                console.log('not less than 767px');
+                // console.log('not less than 767px');
                 chatsLists.forEach(element => {
                     element.classList.remove('small-screen-added-lists');
                 });
+                $('#right-bar').css('display', 'block');
+                $('#left-bar').css('display', 'block');
                 document.getElementById('right-bar').classList.remove('small-right-bar');
                 document.getElementById('left-bar').classList.remove('small-left-bar');
             }
@@ -951,7 +1143,8 @@
 
         $(document).on('click', '.small-screen-added-lists', function() {
             $('#type-message').focus();
-            $('.small-left-bar').css('transform', 'translateX(-100%)');
+            $('.small-left-bar').css('display', 'none');
+            $('.small-right-bar').css('display', 'block');
         });
         let emojiDivShown = false;
         $('.emoji-btn').on('click', function() {
@@ -965,6 +1158,15 @@
             }
         });
 
+
+        $('.go-back-cont').on('click', function() {
+            $('.small-left-bar').css('display', 'block');
+            $('.small-right-bar').css('display', 'none');
+        });
+
+
+        // -----------------------------------------responsive js ----------------------------------------------//
+
         $(document).on('click', '#chats, .send-msg-btn img', emojiDivClose);
 
         function emojiDivClose() {
@@ -974,13 +1176,37 @@
                 $('.emoji-div').css('display', 'none');
             }
         }
-
-
-        $('#send-the-msg').on('click', function() {
-            $('#send-msg').submit();
-        });
     </script>
 
+    <script>
+        // --------------------------------  Dynamically get the chats ----------------------------------------//
+
+        $(document).on('click', '#added-lists .indivisual-user', function(e) {
+            // console.log('ab ayega maaza');
+            let username = $(this).data('username');
+            let id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('get-message', ['id' => ':id', 'username' => ':username']) }}"
+                    .replace(':id', id)
+                    .replace(':username', username),
+                type: 'GET',
+                success: function(data) {
+                    var chatsSecD = $('#chats');
+                    chatsSecD.css('scroll-behavior', 'auto');
+                    $('#chats').html(data);
+                    $('#send-the-msg').data('id', id);
+                    var chatsSecD = $('#chats');
+                    chatsSecD.scrollTop(chatsSecD.prop('scrollHeight'));
+                    chatsSecD.css('scroll-behavior', 'smooth');
+                }
+            });
+        });
+
+        // --------------------------------  Dynamically get the chats ----------------------------------------// 
+    </script>
+
+
+    {{-- -------------------- emoji script  ------------------- --}}
     <script type="module">
         document.addEventListener('emoji-click', (event) => {
             const textarea = document.getElementById('type-message');
@@ -1001,6 +1227,7 @@
             textarea.dispatchEvent(new Event('input'));
         }
     </script>
+    {{-- -------------------- emoji script  ------------------- --}}
 
 </body>
 
