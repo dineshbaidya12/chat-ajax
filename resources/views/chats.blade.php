@@ -53,6 +53,8 @@
                 $formattedDate = 'Today';
             } elseif ($carbonTime->isYesterday()) {
                 $formattedDate = 'Yesterday';
+            } elseif ($carbonTime->diffInDays($now) == 1) {
+                $formattedDate = $carbonTime->diffInDays($now) . ' day ago';
             } elseif ($carbonTime->diffInDays($now) <= 3) {
                 $formattedDate = $carbonTime->diffInDays($now) . ' days ago';
             } else {

@@ -101,17 +101,11 @@ class mainController extends Controller
             $otherPersoneName = $otherPersoDetails->name;
             $dbImage = $otherPersoDetails->profile_pic;
 
-            if ($dbImage == null || $dbImage == '' || empty($dbImage)) {
+            if ($dbImage == null || $dbImage == '') {
                 $otherPersonImage = asset('assets/images/dummy-imgs/default-profile-picture.jpg');
             } else {
-                if (file_exists(asset('user_profile_picture/thumb/' . $dbImage))) {
-                    $otherPersonImage = asset('user_profile_picture/thumb/' . $dbImage);
-                } else {
-                    $otherPersonImage = asset('assets/images/dummy-imgs/default-profile-picture.jpg');
-                }
+                $otherPersonImage = asset('user_profile_picture/thumb/' . $dbImage);
             }
-
-            $otherPersonImage = asset('user_profile_picture/thumb/' . $dbImage);
             $otherPersoneId = $otherPersoDetails->id;
 
             return view('chats', compact('messages', 'otherPersoneName', 'otherPersonImage', 'otherPersoneId'));
