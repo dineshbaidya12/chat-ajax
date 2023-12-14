@@ -55,7 +55,7 @@
         <input type="password" placeholder="Password" id="password" name="password">
 
         <button type="button" id="login-btn">Log In</button>
-        <a href="{{ route('register') }}" class="pt-2">Not have account?</a>
+        <a href="{{ route('register') }}" class="pt-2">Don't have an account?</a>
         {{-- <div class="social">
             <div class="go"><i class="fab fa-google"></i> Google</div>
             <div class="fb"><i class="fab fa-facebook"></i> Facebook</div>

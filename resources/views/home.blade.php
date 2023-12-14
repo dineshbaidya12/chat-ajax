@@ -138,6 +138,7 @@
         }
 
 
+
         /* Green Circle count how much unread message */
 
         .unread-msg-count {
@@ -169,6 +170,76 @@
             background-color: #4f5055;
         }
 
+        .inner-rightbar-cover {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: white;
+            background: url("{{ asset('assets/images/bg/welcome.jpg') }}") no-repeat center center/cover;
+            z-index: 9999;
+            right: 0;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .str-conv-h1 {
+            font-size: 40px;
+            font-family: var(--primary-heading);
+            color: white;
+            font-weight: bold;
+            color: #202124;
+            font-weight: bold;
+            font-family: var(--primary-heading);
+            text-shadow: 1px 1px 1px #f97d7d;
+        }
+
+        .preloader {
+            height: 100vh;
+            width: 100vw;
+            background: white;
+            z-index: 99999;
+            top: 0;
+            left: 0;
+            position: absolute;
+        }
+
+        .add-new-connections {
+            bottom: 10px;
+            right: 12px;
+            z-index: 999;
+        }
+
+        .add-new-connections img {
+            height: 30px;
+            width: 30px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .preloader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .preloader img {
+            height: 10%;
+            animation: rotate 2s linear infinite;
+        }
 
         @media (min-width: 420px) and (max-width: 767px) {
             .users-list {
@@ -310,17 +381,76 @@
                 --background: #202124;
             }
         }
+
+        #suggetion-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #suggetion-container::-webkit-scrollbar-thumb {
+            background-color: #394053;
+        }
+
+        #suggetion-container::-webkit-scrollbar-track {
+            background-color: #4f5055;
+        }
+
+        #suggetion-container {
+            position: absolute;
+            width: 100%;
+            list-style: none;
+            padding: 9px;
+            background: white;
+            max-height: 150px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #394053 #4f5055;
+            z-index: 999;
+        }
+
+        #suggetion-container li {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            cursor: pointer;
+            transition: .2s ease-in;
+        }
+
+
+        #suggetion-container li:hover {
+            background: #ddd;
+        }
+
+        .suggestion-users {
+            height: 35px;
+            width: 35px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+            margin-right: 10px;
+        }
+
+        #request-connection {
+            background: #202124 !important;
+            color: white;
+            opacity: .1;
+            cursor: no-drop;
+        }
     </style>
 </head>
 
-<body>
+<body class="position-relative">
+    <div class="preloader">
+        <img src="{{ asset('assets/images/bg/buffer.png') }}">
+    </div>
     <div class="page-wrapper">
         <div class="container-flued">
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-3 left-bar inside-container" id="left-bar">
                     <div class="row">
                         <div class="left-bar-header p-2 w-100 position-relative">
-
+                            <div class="add-new-connections position-absolute">
+                                <img src="{{ asset('assets/images/dummy-imgs/add.png') }}">
+                            </div>
                             <ul class="position-absolute more-option-left" id="more-option-left">
                                 <a href="#">
                                     <li>View Profile</li>
@@ -377,32 +507,6 @@
                                         <div class="inner-user-list added-lists" id="added-lists">
 
                                             <div class="col-12">
-                                                {{-- 
-
-                                                ----------- Template of Showinf Added Lists ----------------
-
-                                                
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick-double.png') }}"
-                                                                alt="tick" class="status-read"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                ----------- Template of Showinf Added Lists ----------------
-
-                                                --}}
 
                                                 @if (count($connections) > 0)
                                                     @foreach ($connections as $conn)
@@ -696,6 +800,15 @@
                 </div>
                 <div class="col-12 col-md-8 col-lg-9 right-bar" id="right-bar">
 
+                    <div class="inner-rightbar-cover">
+                        <h1 class="str-conv-h1">Start Conversation<span
+                                style="color:#202124; font-weight:bold; font-family:var(--primary-heading);text-shadow: 1px 1px 1px #f97d7d;">
+                                With
+                            </span>Your
+                            Connections</h1>
+                    </div>
+
+
                     <div class="row">
                         <div class="col-12 m-auto conversation-container">
                             <div class="conversation-header">
@@ -771,6 +884,44 @@
         </div>
     </div>
 
+
+    {{-- ------------------ MOdel  -------------------- --}}
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="requestModel" aria-labelledby="requestModelLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="requestModelLabel">Request to make connection</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Your form content goes here -->
+                    <form>
+                        <div class="form-group position-relative" id="request-username">
+                            <label for="request-user-type">Username</label>
+                            <input type="text" class="form-control" id="request-user-type"
+                                placeholder="testing.web017" autocomplete="off" name="request-the-db">
+                            <ul id="suggetion-container">
+                            </ul>
+                        </div>
+                        <input type="text" id="request-user-id" name="request_user_id" value=""
+                            style="color:black;">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn" id="request-connection">Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ------------------ MOdel  -------------------- --}}
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.js"></script>
     <script>
         @if (session('error'))
@@ -795,6 +946,10 @@
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script>
         $(document).ready(function() {
+
+            $('.preloader').css('display', 'none');
+
+
             //------------scroll to bottom 
             var chatsSec = $('#chats');
             chatsSec.css('scroll-behavior', 'auto');
@@ -1068,7 +1223,91 @@
             // ---------------------- check For new message every 500 milisecond ---------------------- //
 
 
+            // ------------------------ ADD NEW USER ------------------//
 
+            // $('.add-new-connections').on('click', function() {
+            //     Swal.fire({
+            //         title: 'Request',
+            //         input: 'text',
+            //         inputPlaceholder: 'Type something...',
+            //         showCancelButton: true,
+            //         confirmButtonText: 'Request',
+            //         cancelButtonText: 'Cancel',
+            //         showLoaderOnConfirm: true,
+            //         preConfirm: (inputValue) => {
+            //             // Handle the input value (you can send a request here)
+            //             return new Promise((resolve) => {
+            //                 setTimeout(() => {
+            //                     if (!inputValue) {
+            //                         Swal.showValidationMessage(
+            //                             'Please enter something');
+            //                     }
+            //                     resolve(inputValue);
+            //                 }, 1000);
+            //             });
+            //         },
+            //         allowOutsideClick: () => !Swal.isLoading()
+            //     }).then((result) => {
+            //         if (result.isConfirmed) {
+            //             Swal.fire({
+            //                 title: 'Success!',
+            //                 text: `You entered: ${result.value}`,
+            //                 icon: 'success',
+            //                 confirmButtonText: 'OK'
+            //             });
+            //         }
+            //     });
+            // });
+
+            $('.add-new-connections').on('click', function() {
+                $('#request-user-id').val('');
+                $('#requestModel').modal('show');
+            });
+
+            $('#request-user-type').on('input', function() {
+                $('#request-user-id').val('');
+                let username = $(this).val();
+                if (username != '') {
+                    $.ajax({
+                        url: "{{ route('search-user', ['username' => ':username']) }}"
+                            .replace(':username', username),
+                        type: 'GET',
+                        success: function(data) {
+                            $('#suggetion-container').html(data.message);
+                        }
+                    });
+                } else {
+                    $('#suggetion-container li').hide();
+                }
+            });
+
+            $(document).on('click', '#suggetion-container li', function() {
+                $('#request-user-type').val($(this).data('name'));
+                $('#suggetion-container li').hide();
+                $('#request-user-id').val($(this).data('id'));
+            });
+
+            $(document).on('input', '#request-user-id', function() {
+                if ($(this).val() == '') {
+                    makeRequestBtnVisible();
+                } else {
+                    makeRequestBtnInvisible();
+                }
+            });
+
+            function makeRequestBtnVisible() {
+                console.log('visible');
+                $('#request-connection').css('opacity', 1);
+                $('#request-connection').css('cursor', 'pointer');
+            }
+
+            function makeRequestBtnInvisible() {
+                console.log('invisible');
+                $('#request-connection').css('opacity', .1);
+                $('#request-connection').css('cursor', 'no-drop');
+            }
+
+            // ------------------------ ADD NEW USER ------------------//
 
             setInterval(() => {
                 var currentChatId = $('#send-the-msg').data('id');
@@ -1089,27 +1328,13 @@
                         }
                     });
                 }
-            }, 2500);
-
+            }, 1000);
 
             // ---------------------- check For new message every 500 milisecond ---------------------- //
 
-
-
-
-
-
-
         });
 
-
-
-
         // -----------------------------------------responsive js ----------------------------------------------//
-
-
-
-
 
         //-------window size
         let smallScreenMediaQuery = window.matchMedia('(max-width: 767px)');
@@ -1198,6 +1423,7 @@
                     var chatsSecD = $('#chats');
                     chatsSecD.scrollTop(chatsSecD.prop('scrollHeight'));
                     chatsSecD.css('scroll-behavior', 'smooth');
+                    $('.inner-rightbar-cover').css('display', 'none');
                 }
             });
         });

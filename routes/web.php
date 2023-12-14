@@ -31,4 +31,5 @@ Route::group(['middleware' => 'checkUserLoggedIn'], function () {
     // Route::get('/{user}', [MainController::class, 'userChats'])->name('user-chats');
     Route::get('/get-message/{id}/{username}', [MainController::class, 'getMessage'])->name('get-message');
     Route::get('/get-message-realtime/{id}/{username}', [MainController::class, 'getMessageRealtime'])->name('get-message-realtime');
+    Route::get('/search-user/{username}', [MainController::class, 'searchUser'])->name('search-user');
 });

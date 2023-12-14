@@ -94,7 +94,7 @@ class mainController extends Controller
                 ->orderBy('time', 'ASC')
                 ->get();
 
-            Message::where('reciever', $authUserId)->update(['status' => 'seen']);
+            Message::where('reciever', $authUserId)->where('status', 'unseen')->update(['status' => 'seen']);
 
             $otherPersoDetails = User::where('id', $id)->select('id', 'name', 'profile_pic')->first();
             // dd($otherPersoDetails->toArray());
@@ -181,6 +181,28 @@ class mainController extends Controller
             return view('realtime-chats', compact('messages'));
         } catch (\Exception $err) {
             return response()->json(['status' => false, 'message' => 'Something went wrong ' . $err]);
+        }
+    }
+
+    public function searchUser($username)
+    {
+        try {
+            $users = User::where('username', 'like', '%' . $username . '%')->where('status', 'active')->where('type', 'user')->select('id', 'name', 'username', 'profile_pic')->limit(50)->get();
+            $response = '';
+            foreach ($users as $user) {
+                $profilePic = '';
+                if ($user->profile_pic != '') {
+                    $profilePic = asset('user_profile_picture/thumb/' . $user->profile_pic);
+                } else {
+                    $profilePic = asset('assets/images/dummy-imgs/default-profile-picture.jpg');
+                }
+
+                $response .= "<li data-id=\"$user->id\" data-name=\"$user->name ($user->username)\"><img src=\"$profilePic\" alt=\"$user->username\" class=\"suggestion-users\">$user->name ($user->username)</li>";
+            }
+
+            return response()->json(['status' => true, 'message' => $response]);
+        } catch (\Exception $err) {
+            return response()->json(['status' => false, 'message' => $err]);
         }
     }
 }
