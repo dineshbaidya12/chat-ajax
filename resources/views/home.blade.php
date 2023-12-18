@@ -1287,13 +1287,15 @@
                 $('#request-user-id').val($(this).data('id'));
             });
 
-            $(document).on('input', '#request-user-id', function() {
+
+            $('#request-user-id').on('input', function() {
                 if ($(this).val() == '') {
-                    makeRequestBtnVisible();
-                } else {
                     makeRequestBtnInvisible();
+                } else {
+                    makeRequestBtnVisible();
                 }
             });
+
 
             function makeRequestBtnVisible() {
                 console.log('visible');
@@ -1320,7 +1322,7 @@
                             .replace(':username', $('#send-the-msg').data('username')),
                         type: 'GET',
                         success: function(data) {
-                            console.log(data);
+                            // console.log(data);
                             chatDiv.append(data);
                             if (data != '' && data != null) {
                                 chatDiv.scrollTop(chatDiv.prop('scrollHeight'));
