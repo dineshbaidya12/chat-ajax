@@ -60,6 +60,10 @@ hr {
     margin: 0px !important;
 }
 
+.h-0 {
+    height: 0px;
+}
+
 .spacer-10 {
     display: block;
     height: 10px;

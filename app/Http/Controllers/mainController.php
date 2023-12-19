@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use Mews\Purifier\Facades\Purifier;
 
@@ -46,8 +47,26 @@ class mainController extends Controller
     public function index()
     {
         $authUser = Auth::user();
-        $connections = ConnectionModel::where('connections.first_user', $authUser->id)->orWhere('connections.second_user', $authUser->id)->where('connections.status', 'connected')->orderby('connected_from', 'ASC')->select('id', 'first_user', 'second_user', 'last_message')->get();
-        // dd($connections->toArray());
+        $connections = ConnectionModel::where(function ($query) use ($authUser) {
+            $query->where('connections.first_user', $authUser->id)
+                ->orWhere('connections.second_user', $authUser->id);
+        })
+            ->where('connections.status', 'connected')
+            ->orderBy('connected_from', 'ASC')
+            ->select('id', 'first_user', 'second_user', 'last_message')
+            ->get();
+
+        $requestsLists = ConnectionModel::where(function ($query) use ($authUser) {
+            $query->where('connections.first_user', $authUser->id)
+                ->orWhere('connections.second_user', $authUser->id);
+        })
+            ->where('connections.status', 'requested')
+            ->whereNOt('connections.requested_by', $authUser->id)
+            ->orderBy('connected_from', 'ASC')
+            ->select('id', 'first_user', 'second_user', 'last_message')
+            ->get();
+
+        // dd($requestsLists->toArray());
         return view('home', compact('connections'));
     }
 
@@ -187,7 +206,11 @@ class mainController extends Controller
     public function searchUser($username)
     {
         try {
-            $users = User::where('username', 'like', '%' . $username . '%')->where('status', 'active')->where('type', 'user')->select('id', 'name', 'username', 'profile_pic')->limit(50)->get();
+            if ($username == '') {
+                return response()->json(['status' => true, 'message' => '']);
+            }
+            $authUser = Auth::user();
+            $users = User::where('username', 'like', '%' . $username . '%')->orWhere('name', 'like', '%' . $username . '%')->where('status', 'active')->where('type', 'user')->whereNotIn('id', [$authUser->id])->select('id', 'name', 'username', 'profile_pic')->limit(50)->get();
             $response = '';
             foreach ($users as $user) {
                 $profilePic = '';
@@ -201,6 +224,65 @@ class mainController extends Controller
             }
 
             return response()->json(['status' => true, 'message' => $response]);
+        } catch (\Exception $err) {
+            return response()->json(['status' => false, 'message' => $err]);
+        }
+    }
+
+    public function sendRequest(Request $request)
+    {
+        try {
+            $id = $request->id;
+            $authUser = Auth::user();
+            if ($id == 0 || $id == '') {
+                return response()->json(['status' => false, 'message' => "Something went wrong please reload and check again."]);
+            }
+            //Check for user exist
+            $user = User::where('id', $id)->select('id', 'username', 'name', 'status')->first();
+            if (!$user) {
+                return response()->json(['status' => false, 'message' => 'User not found.']);
+            }
+            //Check for user active or not
+            if ($user->status != 'active') {
+                return response()->json(['status' => false, 'message' => 'User account is not active.']);
+            }
+            //Check for already connected first user
+            $friendListsFirst = ConnectionModel::where('first_user', $authUser->id)->where('second_user', $id)->first();
+            if ($friendListsFirst) {
+                if ($friendListsFirst->status == 'connected') {
+                    return response()->json(['status' => false, 'message' => 'You already have connection with ' . $user->name . ' (' . $user->username . ')']);
+                } else if ($friendListsFirst->status == 'requested' && $friendListsFirst->requested_by == $authUser->id) {
+                    return response()->json(['status' => false, 'message' => 'You have already send connection request to ' . $user->name . ' (' . $user->username . ')']);
+                } else if ($friendListsFirst->status == 'requested' && $friendListsFirst->requested_by == $id) {
+                    return response()->json(['status' => false, 'message' => $user->name . ' (' . $user->username . ') already send you connection request please check request list to accept.']);
+                } else if ($friendListsFirst->status == "blocked") {
+                    return response()->json(['status' => false, 'message' => 'This conversation is blocked']);
+                }
+            }
+            //Check for already connected second user
+            $friendListsSecond = ConnectionModel::where('second_user', $authUser->id)->where('first_user', $id)->first();
+            if ($friendListsSecond) {
+                if ($friendListsSecond->status == 'connected') {
+                    return response()->json(['status' => false, 'message' => 'You already have connection with ' . $user->name . ' (' . $user->username . ')']);
+                } else if ($friendListsSecond->status == 'requested' && $friendListsSecond->requested_by == $authUser->id) {
+                    return response()->json(['status' => false, 'message' => 'You have already send connection request to ' . $user->name . ' (' . $user->username . ')']);
+                } else if ($friendListsSecond->status == 'requested' && $friendListsSecond->requested_by == $id) {
+                    return response()->json(['status' => false, 'message' => $user->name . ' (' . $user->username . ') already send you connection request please check request list to accept.']);
+                } else if ($friendListsSecond->status == "blocked") {
+                    return response()->json(['status' => false, 'message' => 'This conversation is blocked']);
+                }
+            }
+            //check for block list
+
+
+            //Send friend requiest
+            $connection = new ConnectionModel();
+            $connection->first_user = $authUser->id;
+            $connection->second_user = $id;
+            $connection->status = 'requested';
+            $connection->requested_by = $authUser->id;
+            $connection->save();
+            return response()->json(['status' => true, 'message' => 'Connection request send to ' . $user->name . ' (' . $user->username . ')']);
         } catch (\Exception $err) {
             return response()->json(['status' => false, 'message' => $err]);
         }

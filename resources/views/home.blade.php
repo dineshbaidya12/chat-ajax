@@ -605,187 +605,13 @@
                                                     </div>
                                                     <div class="user-details-div col-9">
                                                         <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
+                                                        <p class="m-0 message-details h-0">
+                                                            Just a moment ago
                                                         </p>
                                                     </div>
                                                 </div>
 
                                                 <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick-double.png') }}"
-                                                                alt="tick" class="status-read"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details">
-                                                            <img src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
-                                                                alt="tick" class="status-unread"> Hello, Dummy
-                                                            User
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span class="separtor"></span>
-
-
 
 
                                             </div>
@@ -907,7 +733,7 @@
                             <ul id="suggetion-container">
                             </ul>
                         </div>
-                        <input type="text" id="request-user-id" name="request_user_id" value=""
+                        <input type="hidden" id="request-user-id" name="request_user_id" value=""
                             style="color:black;">
                     </form>
                 </div>
@@ -1144,6 +970,7 @@
 
             //----------- send message ---------//
             $('#send-the-msg').on('click', function() {
+                $('.no-conv').css('display', 'none');
                 let chatsDiv = $('#chats');
                 let message = $('#type-message').val().trim();
                 let id = $(this).data('id');
@@ -1260,12 +1087,12 @@
             // });
 
             $('.add-new-connections').on('click', function() {
-                $('#request-user-id').val('');
+                $('#request-user-id').val('').trigger('input');
                 $('#requestModel').modal('show');
             });
 
             $('#request-user-type').on('input', function() {
-                $('#request-user-id').val('');
+                $('#request-user-id').val('').trigger('input');
                 let username = $(this).val();
                 if (username != '') {
                     $.ajax({
@@ -1284,7 +1111,8 @@
             $(document).on('click', '#suggetion-container li', function() {
                 $('#request-user-type').val($(this).data('name'));
                 $('#suggetion-container li').hide();
-                $('#request-user-id').val($(this).data('id'));
+                $('#request-user-id').val($(this).data('id')).trigger(
+                    'input');
             });
 
 
@@ -1298,16 +1126,50 @@
 
 
             function makeRequestBtnVisible() {
-                console.log('visible');
+                // console.log('visible');
                 $('#request-connection').css('opacity', 1);
                 $('#request-connection').css('cursor', 'pointer');
             }
 
             function makeRequestBtnInvisible() {
-                console.log('invisible');
+                // console.log('invisible');
                 $('#request-connection').css('opacity', .1);
                 $('#request-connection').css('cursor', 'no-drop');
             }
+
+            $('#request-connection').on('click', function() {
+                let id = $('#request-user-id').val();
+                console.log(id);
+                if (id != '' && id != 0) {
+                    $.ajax({
+                        url: "{{ route('send-request') }}",
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            '_token': '{{ csrf_token() }}'
+                        },
+                        success: function(data) {
+                            if (data.status) {
+                                $('#request-user-type').val('');
+                                $('#request-user-id').val('').trigger('input');
+                                Swal.fire({
+                                    title: data.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: data.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        }
+                    });
+                }
+
+
+            });
 
             // ------------------------ ADD NEW USER ------------------//
 
@@ -1456,6 +1318,17 @@
         }
     </script>
     {{-- -------------------- emoji script  ------------------- --}}
+
+
+    {{-- Perform clicks by link --}}
+    <script>
+        var fragment = window.location.hash;
+        if (fragment === '#request') {
+            $('.tabs-a').trigger('click');
+        } else {
+            console.log('Fragment is ' + fragment);
+        }
+    </script>
 
 </body>
 
