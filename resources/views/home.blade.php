@@ -497,7 +497,13 @@
                                         <div class="col-6 text-center req hover transition" id="requests-btn">
                                             <a class="tabs-a" href="/#request">
                                                 <p class="margin-0">
-                                                    Request(1)
+                                                    @php
+                                                        if (count($requestsLists) > 0) {
+                                                            echo 'Request(' . count($requestsLists) . ')';
+                                                        } else {
+                                                            echo 'Request';
+                                                        }
+                                                    @endphp
                                                 </p>
                                             </a>
                                         </div>
@@ -598,21 +604,75 @@
 
                                             <div class="col-12">
 
-                                                <div class="row indivisual-user">
-                                                    <div class="user-image-div col-3">
-                                                        <img src="{{ asset('assets/images/dummy-imgs/35.jpg') }}"
-                                                            alt="Lorem Ipsum" class="users-dp">
-                                                    </div>
-                                                    <div class="user-details-div col-9">
-                                                        <p class="m-0 user-name">Lorem Ipsum</p>
-                                                        <p class="m-0 message-details h-0">
-                                                            Just a moment ago
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                                @if (count($requestsLists) > 0)
+                                                    @foreach ($requestsLists as $req)
+                                                        @if ($req->first_user !== auth()->user()->id)
+                                                            @php
+                                                                $id = $req->first_user;
+                                                            @endphp
+                                                        @else
+                                                            @php
+                                                                $id = $req->second_user;
+                                                            @endphp
+                                                        @endif
 
-                                                <span class="separtor"></span>
 
+                                                        @php
+                                                            $userDetails = app('App\Http\Controllers\controller')->getUserDetails($id);
+                                                            if (!$userDetails) {
+                                                                continue;
+                                                            }
+                                                        @endphp
+
+                                                        @if ($userDetails->profile_pic != '')
+                                                            @php
+                                                                $profilePic = asset('user_profile_picture/' . $userDetails->profile_pic);
+                                                            @endphp
+                                                        @else
+                                                            @php
+                                                                $profilePic = asset('assets/images/dummy-imgs/default-profile-picture.jpg');
+                                                            @endphp
+                                                        @endif
+
+                                                        <div class="row indivisual-user">
+                                                            <div class="user-image-div col-3">
+                                                                <img src="{{ $profilePic }}"
+                                                                    alt="{{ $userDetails->name }}" class="users-dp">
+                                                            </div>
+                                                            <div class="user-details-div col-4 p-0">
+                                                                <p class="m-0 user-name overflow-slide">
+                                                                    {{ $userDetails->name ?? '' }}
+                                                                    {{ '(' . $userDetails->username . ')' }}
+                                                                </p>
+                                                                <p class="m-0 message-details h-0">
+                                                                    {{ app('App\Http\Controllers\controller')->formatTimeAgo($req->created_at) }}
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-5 p-0 req-action">
+                                                                <button data-id="{{ $req->id }}"
+                                                                    data-action="accept"
+                                                                    data-username="{{ $userDetails->name }}"
+                                                                    class="btn req-action-btn accept-btn"><img
+                                                                        src="{{ asset('assets/images/dummy-imgs/tick.png') }}"
+                                                                        alt="Accept"></button>
+                                                                <button data-id="{{ $req->id }}"
+                                                                    data-action="reject"
+                                                                    data-username="{{ $userDetails->name }}"
+                                                                    class="btn req-action-btn reject-btn"><img
+                                                                        src="{{ asset('assets/images/dummy-imgs/reject.png') }}"
+                                                                        alt="Accept"></button>
+                                                            </div>
+                                                        </div>
+
+                                                        <span class="separtor"></span>
+                                                    @endforeach
+                                                @else
+                                                    <div class="row">
+                                                        <div class="no-requests">
+                                                            You Don't Have Any Request
+                                                        </div>
+                                                    </div>
+                                                @endif
 
                                             </div>
 
@@ -990,7 +1050,7 @@
                             '_token': '{{ csrf_token() }}'
                         },
                         success: function(data) {
-                            console.log(data);
+                            // console.log(data);
                             if (data.status) {
                                 let newDivContent =
                                     `<div class="conversations-sender conversations">${data.message}</p></div>
@@ -1009,7 +1069,7 @@
                         }
                     });
                 } else {
-                    console.log('spaces');
+                    // console.log('spaces');
                 }
 
             });
@@ -1139,7 +1199,7 @@
 
             $('#request-connection').on('click', function() {
                 let id = $('#request-user-id').val();
-                console.log(id);
+                // console.log(id);
                 if (id != '' && id != 0) {
                     $.ajax({
                         url: "{{ route('send-request') }}",
@@ -1173,6 +1233,92 @@
 
             // ------------------------ ADD NEW USER ------------------//
 
+            //------------------ request username slide ------------------//
+
+            $('.user-name').click(function() {
+                var $this = $(this);
+                var currentScrollLeft = $this.scrollLeft();
+
+                // console.log(currentScrollLeft);
+                var targetScrollLeft = (currentScrollLeft === 0) ? $this[0].scrollWidth : 0;
+
+                $this.animate({
+                    scrollLeft: targetScrollLeft
+                }, 'slow');
+            });
+
+            //------------------ request username slide ------------------//
+
+
+            //------------------ accept reject action ------------------//
+
+
+            $('.req-action-btn').on('click', function() {
+                let id = $(this).data('id');
+                let action = $(this).data('action');
+                let username = $(this).data('username');
+                let btn = $(this);
+
+                Swal.fire({
+                    title: 'Are you sure you want to ' + action + ' ' + username + '?',
+                    text: "This action cannot be undone.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, proceed!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (id != '' && (action == 'accept' || action == 'reject')) {
+                            $.ajax({
+                                url: "{{ route('accept-reject-request') }}",
+                                type: 'POST',
+                                data: {
+                                    id: id,
+                                    action: action,
+                                    '_token': '{{ csrf_token() }}'
+                                },
+                                success: function(data) {
+                                    if (data.status) {
+                                        Swal.fire({
+                                            title: data.message,
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        });
+                                        var indivisualUser = btn.closest(
+                                            '.indivisual-user');
+                                        indivisualUser.next('.separtor').hide();
+                                        indivisualUser.hide();
+                                        $('#added-lists .col-12').append(data.data
+                                            .htmlStructure);
+                                        $('#added-lists .col-12 p:first').hide();
+                                        handleScreenSizeChange();
+                                    } else {
+                                        Swal.fire({
+                                            title: data.message,
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Invalid request parameters.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    }
+                });
+            });
+
+
+
+            //------------------ accept reject action ------------------//
+
+
             setInterval(() => {
                 var currentChatId = $('#send-the-msg').data('id');
                 // console.log(currentChatId);
@@ -1202,9 +1348,10 @@
 
         //-------window size
         let smallScreenMediaQuery = window.matchMedia('(max-width: 767px)');
-        let chatsLists = document.getElementById('added-lists').querySelectorAll('.indivisual-user');
+
 
         function handleScreenSizeChange() {
+            let chatsLists = document.getElementById('added-lists').querySelectorAll('.indivisual-user');
             if (smallScreenMediaQuery.matches) {
                 // console.log('less than 767px');
                 chatsLists.forEach(element => {
@@ -1322,12 +1469,12 @@
 
     {{-- Perform clicks by link --}}
     <script>
-        var fragment = window.location.hash;
-        if (fragment === '#request') {
-            $('.tabs-a').trigger('click');
-        } else {
-            console.log('Fragment is ' + fragment);
-        }
+        // var fragment = window.location.hash;
+        // if (fragment === '#request') {
+        //     $('.tabs-a').trigger('click');
+        // } else {
+        //     console.log('Fragment is ' + fragment);
+        // }
     </script>
 
 </body>

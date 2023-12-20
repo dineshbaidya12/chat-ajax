@@ -224,6 +224,7 @@ hr {
     scrollbar-width: thin;
     scrollbar-color: #394053 #4f5055;
     height: 90%;
+    width: 100%;
 }
 
 /* WebKit scrollbar styles */
@@ -541,4 +542,43 @@ hr {
     border-radius: 50%;
     height: 150%;
     width: 150%;
+}
+
+.no-requests {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.user-name {
+    white-space: nowrap;
+    overflow: auto;
+    width: 100%;
+    scrollbar-width: none;
+}
+
+.user-name::-webkit-scrollbar {
+    display: none;
+}
+
+.req-action {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    transition: all .5s ease-in;
+}
+
+.req-action button {
+    border-radius: 50%;
+}
+
+
+.accept-btn:hover,
+.accept-btn:active {
+    background: #45934591;
+}
+
+.reject-btn:hover,
+.reject-btn:active {
+    background: #ffa4a48c;
 }

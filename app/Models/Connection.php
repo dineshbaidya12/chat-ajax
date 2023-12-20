@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Connection extends Model
 {
     use HasFactory;
+    public $timestamps = true;
     protected $fillable = [
         'first_user', 'second_user', 'status', 'requested_by', 'blocked_by', 'connected_from', 'blocked_time', 'last_message'
     ];

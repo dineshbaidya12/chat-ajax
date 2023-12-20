@@ -62,12 +62,12 @@ class mainController extends Controller
         })
             ->where('connections.status', 'requested')
             ->whereNOt('connections.requested_by', $authUser->id)
-            ->orderBy('connected_from', 'ASC')
-            ->select('id', 'first_user', 'second_user', 'last_message')
+            ->orderBy('created_at', 'ASC')
+            ->select('id', 'first_user', 'second_user', 'last_message', 'created_at')
             ->get();
 
         // dd($requestsLists->toArray());
-        return view('home', compact('connections'));
+        return view('home', compact('connections', 'requestsLists'));
     }
 
     // public function sendMsg(Request $request)
@@ -285,6 +285,74 @@ class mainController extends Controller
             return response()->json(['status' => true, 'message' => 'Connection request send to ' . $user->name . ' (' . $user->username . ')']);
         } catch (\Exception $err) {
             return response()->json(['status' => false, 'message' => $err]);
+        }
+    }
+
+    public function acceptRejectRequest(Request $request)
+    {
+        try {
+            $rules = [
+                'id' => 'required|numeric',
+                'action' => 'required|in:accept,reject'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json(['status' => false, 'message' => 'Validation Failed']);
+            }
+
+            $authUser = Auth::user();
+
+            $connection = ConnectionModel::find($request->id);
+            if (!$connection) {
+                return response()->json(['status' => false, 'message' => 'Connection Not Found']);
+            }
+
+            if ($connection->first_user == $authUser->id || $connection->second_user == $authUser->id) {
+                $otherUser = $connection->first_user == $authUser->id ? $connection->second_user : $connection->first_user;
+                $userD = User::find($otherUser);
+                if (!$userD) {
+                    return response()->json(['status' => false, 'message' => "User not found"]);
+                }
+                if ($request->action == 'accept') {
+                    $connection->status = 'connected';
+                    $connection->connected_from = Carbon::now();
+                    $connection->update();
+
+                    if ($userD->profile_pic == '') {
+                        $dp = asset('assets/images/dummy-imgs/default-profile-picture.jpg');
+                    } else {
+                        $dp = asset('user_profile_picture/thumb/' . $userD->profile_pic);
+                    }
+
+                    $htmlStructureAdded = '
+                    <div class="row indivisual-user" data-id="' . $userD->id . '" data-username="' . $userD->username . '" data-name="' . $userD->name . '">
+                        <div class="user-image-div col-3">
+                            <img src="' . $dp . '" 
+                            alt="' . $userD->name . '" class="users-dp">
+                        </div>
+                        <div class="user-details-div col-9">
+                            <p class="m-0 user-name">
+                                ' . $userD->name . '
+                            </p>
+                            <p class="m-0 message-details">
+                                <span style="color:grey;">No Conversation Yet</span>
+                            </p>
+                                                                
+                        </div>
+                    </div>
+                    ';
+                    return response()->json(['status' => true, 'message' => "Connection request accepted succesfully", 'data' => ['htmlStructure' => $htmlStructureAdded]]);
+                } else {
+                    $connection->delete();
+                    return response()->json(['status' => true, 'message' => "Connection request rejected succesfully"]);
+                }
+            } else {
+                return response()->json(['status' => false, 'message' => "You don't have access to that connection"]);
+            }
+        } catch (\Exception $err) {
+            return response()->json(['status' => false, 'message' => 'Something went wrong.']);
         }
     }
 }
